@@ -1,0 +1,1 @@
+web: gunicorn travShift.wsgi --log-file -
