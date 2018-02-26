@@ -84,32 +84,31 @@ def reply_message(access_token, user_email, messageID):
 	else:
 		return "{0}: {1}".format(r.status_code, r.text)
 
-def check_shift(access_token, user_email, date_wanted, shift_wanted):
+def check_shift(access_token, user_email, date_wanted="", shift_wanted):
 	searching_for_shift = True
 
 	while searching_for_shift:
 		currMessage = get_my_messages(access_token, user_email, num = 1)
-		if currMessage['value'][0]['toRecipients'][0]['emailAddress']['address']:
+		if len(currMessage['value'][0]['toRecipients']) > 0 :
 
 			recipientEmail = currMessage['value'][0]['toRecipients'][0]['emailAddress']['address']
-		else:
-			recipientEmail = None
-		fromEmail = currMessage['value'][0]['from']['emailAddress']['address']
+		
+			fromEmail = currMessage['value'][0]['from']['emailAddress']['address']
 
-		if recipientEmail.lower() == 'travellerstaff@wlu.edu':
-		#if recipientEmail.lower() == 'denningk18@mail.wlu.edu':
+			if recipientEmail.lower() == 'travellerstaff@wlu.edu':
+			#if recipientEmail.lower() == 'denningk18@mail.wlu.edu':
 
-			currSub = currMessage['value'][0]['subject']
-			shift_offered = [i for i in shift_wanted if i in currSub.lower()]
-			
-			if (date_wanted in currSub or 'friday' in currSub.lower() or 'tonight' in currSub.lower()) and (len(shift_offered) > 0):
+				currSub = currMessage['value'][0]['subject']
+				shift_offered = [i for i in shift_wanted if i in currSub.lower()]
 				
-				print("Success!")
-				messID = currMessage['value'][0]['id']
-				reply_message(access_token,user_email,messID)
+				if (date_wanted in currSub or 'tonight' in currSub.lower()) and (len(shift_offered) > 0):
+					
+					print("Success!")
+					messID = currMessage['value'][0]['id']
+					reply_message(access_token,user_email,messID)
 
-				person = currMessage['value'][0]['from']['emailAddress']['name']
-				searching_for_shift = False
+					person = currMessage['value'][0]['from']['emailAddress']['name']
+					searching_for_shift = False
 
-				return person, shift_offered[0]
+					return person, shift_offered[0]
 		time.sleep(1)

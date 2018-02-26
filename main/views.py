@@ -60,7 +60,7 @@ def travWatch(request):
 		date = request.POST['date']
 		shiftList = request.POST.getlist('shift')
 		
-		name, shift_type = check_shift(access_token, user_email, date, shiftList)
+		name, shift_type = check_shift(access_token, user_email, date_wanted=date, shiftList)
 		context = {'date' : date,
 					'shift_type' : shift_type,
 					'name' : name}
