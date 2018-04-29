@@ -2,6 +2,7 @@ import requests
 import uuid
 import json
 import time
+import re
 
 graph_endpoint = 'https://graph.microsoft.com/v1.0{0}'
 
@@ -84,31 +85,35 @@ def reply_message(access_token, user_email, messageID):
 	else:
 		return "{0}: {1}".format(r.status_code, r.text)
 
-def check_shift(access_token, user_email, date_wanted="", shift_wanted):
+def check_shift(access_token, user_email, shift_wanted, date_wanted=""):
 	searching_for_shift = True
 
 	while searching_for_shift:
 		currMessage = get_my_messages(access_token, user_email, num = 1)
 		if len(currMessage['value'][0]['toRecipients']) > 0 :
-
+			#print(currMessage['value'])
 			recipientEmail = currMessage['value'][0]['toRecipients'][0]['emailAddress']['address']
 		
 			fromEmail = currMessage['value'][0]['from']['emailAddress']['address']
-
-			if recipientEmail.lower() == 'travellerstaff@wlu.edu':
+			#print(recipientEmail.lower())
+			if recipientEmail.lower() == 'travellerstaff@mail.wlu.edu':
 			#if recipientEmail.lower() == 'denningk18@mail.wlu.edu':
-
+				#print("yes")
 				currSub = currMessage['value'][0]['subject']
 				shift_offered = [i for i in shift_wanted if i in currSub.lower()]
 				
-				if (date_wanted in currSub or 'tonight' in currSub.lower()) and (len(shift_offered) > 0):
+				#print(shift_offered)
+				if (len(shift_offered) > 0) and ("tonight" in currSub.lower()) and re.search('4/3$',currSub): #re.search('3/2$', currSub) == None and re.search('3/3$', currSub) == None and ("3/9" not in currSub) and ("3/10" not in currSub) and ("3/24" not in currSub):
 					
-					print("Success!")
+					
+					
 					messID = currMessage['value'][0]['id']
 					reply_message(access_token,user_email,messID)
 
 					person = currMessage['value'][0]['from']['emailAddress']['name']
 					searching_for_shift = False
+
+					print("Success!")
 
 					return person, shift_offered[0]
 		time.sleep(1)
