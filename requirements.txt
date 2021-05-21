@@ -46,7 +46,7 @@ requests-toolbelt==0.8.0
 rsa==3.4.2
 s3transfer==0.1.10
 six==1.11.0
-tensorflow==1.4.0
+tensorflow==2.5.0
 tensorflow-tensorboard==0.4.0rc2
 texttable==0.8.6
 Unidecode==0.4.20
