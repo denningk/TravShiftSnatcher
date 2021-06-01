@@ -51,7 +51,7 @@ tensorflow-tensorboard==0.4.0rc2
 texttable==0.8.6
 Unidecode==0.4.20
 uritemplate==3.0.0
-urllib3==1.22
+urllib3==1.26.5
 virtualenv==15.0.3
 websocket-client==0.37.0
 Werkzeug==0.12.2
